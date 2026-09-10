@@ -4,13 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>pSapo — Presupuestos de tortas</title>
+<link rel="icon" href="/static/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="/static/sapo.png">
 <link rel="stylesheet" href="/static/estilo.css">
 </head>
 <body>
 
 <header class="cabecera-app">
   <div class="marca">
-    <span class="logo">pSapo</span>
+    <span class="logo"><img src="/static/sapo.png" alt="" width="28" height="28">pSapo</span>
     <nav class="tabs">
       <button class="tab activa" data-vista="recetas">Recetas</button>
       <button class="tab" data-vista="ingredientes">Ingredientes</button>
@@ -49,7 +51,6 @@
      El video arranca sin src para no descargarlo cuando no se va a ver. -->
 <div id="intro" hidden>
   <video id="intro-video" muted playsinline preload="none"></video>
-  <p class="intro-pie">cargando pSapo<span class="puntos"></span></p>
   <button id="intro-saltear" type="button">Saltear</button>
 </div>
 

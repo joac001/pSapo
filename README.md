@@ -77,6 +77,13 @@ audio a propósito: los navegadores bloquean el autoplay con sonido, y una intro
 que no arranca es peor que una sin audio. El alfa viaja en una pista aparte del
 WebM (`alpha_mode: 1`); ffmpeg no la muestra al decodificar, los navegadores sí.
 
+El último frame del video —el sapo con la corona— es también el logo: recortado
+al bbox del alfa y centrado en un lienzo cuadrado, sale `app/static/sapo.png`
+para el header, `app/static/favicon.ico` para la pestaña y `pSapo.ico` para el
+ejecutable y el acceso directo. Se usa el sapo entero y no un recorte de la
+cabeza porque la cabeza sola queda cortada al mentón; entero se lee bien desde
+24 px.
+
 Se muestra **una vez por cada vez que se abre pSapo**, no en cada recarga: el
 server genera un id en cada arranque y el navegador guarda el último que vio. Se
 saltea con un clic o cualquier tecla, y se salta entera si el sistema pide menos

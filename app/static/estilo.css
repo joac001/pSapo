@@ -44,7 +44,8 @@ table { border-collapse: collapse; width: 100%; }
 }
 
 .marca { display: flex; align-items: center; gap: 28px; }
-.logo { font-size: 17px; font-weight: 650; letter-spacing: -.01em; }
+.logo { display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 650; letter-spacing: -.01em; }
+.logo img { display: block; }
 
 .tabs { display: flex; gap: 2px; }
 
@@ -521,19 +522,8 @@ tr:hover .acciones-fila, tr:focus-within .acciones-fila { visibility: visible; }
   object-fit: contain;
 }
 
-.intro-pie {
-  margin: 0;
-  color: rgba(255, 255, 255, .62);
-  font-size: 13px;
-  letter-spacing: .04em;
-}
-.intro-pie .puntos::after {
-  content: "";
-  animation: puntitos 1.4s steps(4, end) infinite;
-}
-
 #intro-saltear {
-  margin-top: 10px;
+  margin-top: 18px;
   padding: 5px 14px;
   border: 1px solid rgba(255, 255, 255, .22);
   border-radius: 999px;
@@ -545,7 +535,6 @@ tr:hover .acciones-fila, tr:focus-within .acciones-fila { visibility: visible; }
 
 @keyframes aparecer { from { opacity: 0 } to { opacity: 1 } }
 @keyframes desaparecer { to { opacity: 0; visibility: hidden } }
-@keyframes puntitos { 0% { content: "" } 25% { content: "." } 50% { content: ".." } 75% { content: "..." } }
 
 /* Si el sistema pide menos animación, la intro no se muestra (lo decide el JS)
    y cualquier transición que quede es instantánea. */

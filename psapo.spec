@@ -43,5 +43,5 @@ exe = EXE(
     # minutos. Sin una ventana que lo diga, parece que la app no arrancó.
     console=True,
     disable_windowed_traceback=False,
-    icon=None,
+    icon="pSapo.ico",
 )
