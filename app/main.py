@@ -1,5 +1,4 @@
 import threading
-from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
@@ -8,10 +7,12 @@ from pydantic import BaseModel
 
 from . import costos, scraping
 from .db import SUPERS, get_conn, init_db
+from .rutas import recurso
+from .version import VERSION
 
-STATIC_DIR = Path(__file__).parent / "static"
+STATIC_DIR = recurso("app/static")
 
-app = FastAPI(title="pSapo")
+app = FastAPI(title="pSapo", version=VERSION)
 
 _scrape_estado = {"corriendo": False, "hecho": 0, "total": 0, "error": None, "alcance": None}
 
@@ -23,9 +24,16 @@ def arranque():
 
 # --- precios ---------------------------------------------------------------
 
+@app.get("/api/version")
+def version():
+    """La versión que está corriendo. El updater compara contra la del repo."""
+    return {"version": VERSION}
+
+
 @app.get("/api/estado")
 def estado():
     return {
+        "version": VERSION,
         "ultima_actualizacion": scraping.ultima_actualizacion(),
         "desactualizado": scraping.esta_desactualizado(),
         "vencidos": len(scraping.ingredientes_desactualizados()),

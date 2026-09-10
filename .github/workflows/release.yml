@@ -1,0 +1,83 @@
+name: Publicar release de Windows
+
+# Solo desde main: dev es donde se trabaja, main es lo que sale a producción.
+# Lo que dispara una release es subir el número en app/version.py; si ya existe
+# una release con ese tag, el workflow no hace nada.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publicar:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+
+      - name: Correr los tests
+        run: |
+          python tests/test_parseo.py
+          python tests/test_costos.py
+          python tests/test_api.py
+
+      - name: Leer la versión
+        id: version
+        shell: bash
+        run: echo "version=$(python -c 'from app.version import VERSION; print(VERSION)')" >> "$GITHUB_OUTPUT"
+
+      - name: ¿Ya existe esa release?
+        id: existe
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "v${{ steps.version.outputs.version }}" >/dev/null 2>&1; then
+            echo "publicar=no" >> "$GITHUB_OUTPUT"
+            echo "La versión ${{ steps.version.outputs.version }} ya está publicada. Subí el número en app/version.py."
+          else
+            echo "publicar=si" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Armar el ejecutable
+        if: steps.existe.outputs.publicar == 'si'
+        run: pyinstaller --clean --noconfirm psapo.spec
+
+      - name: Comprobar que el ejecutable existe
+        if: steps.existe.outputs.publicar == 'si'
+        shell: pwsh
+        run: |
+          if (-not (Test-Path dist/pSapo.exe)) { throw "No se generó dist/pSapo.exe" }
+          "Tamaño: {0:N1} MB" -f ((Get-Item dist/pSapo.exe).Length / 1MB)
+
+      - name: Publicar la release
+        if: steps.existe.outputs.publicar == 'si'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          cat > notas.md <<'FIN'
+          **Instalación nueva:** descargá `instalar.ps1`, hacé clic derecho y elegí *Ejecutar con PowerShell*.
+          Deja pSapo en el menú inicio y programa el actualizador para que corra al encender la computadora.
+
+          **Si ya tenés pSapo instalado** no hace falta que hagas nada: el actualizador la deja lista para la próxima vez que la abras.
+
+          Tus recetas, precios y correcciones a mano no se tocan: viven en `%LOCALAPPDATA%\pSapo` y sobreviven a la actualización.
+          FIN
+          gh release create "v$VERSION" \
+            dist/pSapo.exe instalador/instalar.ps1 instalador/actualizador.ps1 \
+            --title "pSapo $VERSION" --notes-file notas.md

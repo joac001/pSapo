@@ -1,7 +1,10 @@
 import sqlite3
-from pathlib import Path
 
-DB_PATH = Path(__file__).parent.parent / "psapo.db"
+from .rutas import carpeta_de_datos
+
+# Se resuelve en cada uso y no al importar: los tests la reemplazan por una
+# base temporal, y empaquetado apunta a la carpeta de datos del usuario.
+DB_PATH = carpeta_de_datos() / "psapo.db"
 
 SUPERS = ("carrefour", "disco", "coto")
 

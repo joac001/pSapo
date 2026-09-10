@@ -236,6 +236,59 @@ Están comentadas en el código; el resumen:
 - **`ListPrice` de Disco viene corrupto**, así que solo se considera descuento
   cuando `Price < PriceWithoutDiscount`.
 
+## Cómo se publica
+
+`dev` es la rama de trabajo y es la rama por defecto del repo. `main` es solo lo
+que está en producción: cada push a `main` dispara el workflow que buildea el
+ejecutable de Windows y publica la release.
+
+**Lo que dispara una release es subir el número en `app/version.py`.** El
+workflow lee ese valor y, si ya existe una release con ese tag, no hace nada.
+Así un merge a `main` sin cambio de versión no genera una release repetida.
+
+```bash
+# trabajar
+git checkout dev
+...
+git push
+
+# salir a producción
+# 1. subir VERSION en app/version.py y commitear en dev
+git checkout main && git merge dev && git push
+```
+
+El workflow corre los tres archivos de tests antes de buildear: si algo falla,
+no se publica nada.
+
+## Cómo llega al cliente
+
+Es un único `.exe` de Windows, sin dependencias: no hace falta Python ni nada
+instalado. Lo único que no viaja adentro es el Chromium de Playwright, que pesa
+cientos de megas y se baja solo la primera vez que se abre la app.
+
+| Archivo | Para qué |
+|---|---|
+| `pSapo.exe` | La app |
+| `instalador/instalar.ps1` | Instalación nueva: descarga la última versión, deja los accesos directos y programa el actualizador |
+| `instalador/actualizador.ps1` | Corre al iniciar sesión, mira si hay versión nueva y reemplaza el ejecutable |
+
+Todo queda en `%LOCALAPPDATA%\pSapo`: el ejecutable, `psapo.db`, la versión
+instalada, el navegador y el log del actualizador. No pide permisos de
+administrador.
+
+### Qué pasa con los datos al actualizar
+
+La base vive en la carpeta de datos, no al lado del ejecutable, así que
+reemplazar el `.exe` no la toca. Las migraciones **no** las corre el
+actualizador: las corre la app al abrirse, porque `init_db()` es idempotente y
+las migraciones viven junto al esquema que las necesita. Como una migración no
+se puede deshacer, el actualizador guarda una copia
+(`psapo.db.antes-de-<versión>`) antes de reemplazar nada.
+
+Si la app está abierta, el actualizador no hace nada y lo reintenta en el
+próximo inicio: Windows no deja reemplazar un ejecutable en uso, y cerrarle la
+app al usuario sin avisar sería peor.
+
 ## Correr el proyecto
 
 Ya hay un venv armado en `venv/` con las dependencias instaladas.
