@@ -56,12 +56,16 @@ jobs:
         if: steps.existe.outputs.publicar == 'si'
         run: pyinstaller --clean --noconfirm psapo.spec
 
-      - name: Comprobar que el ejecutable existe
+      - name: Comprobar que el ejecutable arranca
         if: steps.existe.outputs.publicar == 'si'
         shell: pwsh
         run: |
           if (-not (Test-Path dist/pSapo.exe)) { throw "No se generó dist/pSapo.exe" }
           "Tamaño: {0:N1} MB" -f ((Get-Item dist/pSapo.exe).Length / 1MB)
+          # PyInstaller falla en tiempo de ejecución, no al empaquetar: si no
+          # supo detectar un módulo, recién se nota abriendo la app.
+          & dist/pSapo.exe --check
+          if ($LASTEXITCODE -ne 0) { throw "El ejecutable no arranca" }
 
       - name: Publicar la release
         if: steps.existe.outputs.publicar == 'si'

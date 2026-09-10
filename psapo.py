@@ -38,6 +38,27 @@ def esperar_a_que_responda(puerto, segundos=30):
     return False
 
 
+def verificar():
+    """Importa todo y sale. Lo usa el workflow sobre el .exe ya armado.
+
+    PyInstaller falla en tiempo de ejecución, no al empaquetar: un módulo que
+    no supo detectar recién se nota cuando el cliente abre la app. Esto lo
+    convierte en un test del build.
+    """
+    from app.main import app  # noqa: F401
+    from app.rutas import carpeta_de_datos, recurso
+    from app.version import VERSION
+
+    indice = recurso("app/static") / "index.html"
+    if not indice.exists():
+        print(f"FALTA la interfaz en {indice}")
+        return 1
+    print(f"pSapo {VERSION} empaquetado correctamente")
+    print(f"  interfaz: {indice}")
+    print(f"  datos:    {carpeta_de_datos()}")
+    return 0
+
+
 def main():
     from app import navegador
     from app.rutas import carpeta_de_datos
@@ -80,4 +101,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(verificar() if "--check" in sys.argv else main())
