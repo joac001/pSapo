@@ -1,0 +1,500 @@
+:root {
+  --fondo: #f6f6f4;
+  --panel: #ffffff;
+  --borde: #e3e2dd;
+  --borde-fuerte: #cfcdc6;
+  --texto: #21201c;
+  --tenue: #7a7870;
+  --acento: #2f6f4f;
+  --acento-suave: #e8f2ec;
+  --alerta: #9a6212;
+  --alerta-suave: #fdf3e2;
+  --peligro: #a33a2c;
+  --sombra: 0 1px 2px rgba(0, 0, 0, .05), 0 4px 12px rgba(0, 0, 0, .04);
+  --radio: 10px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font: 14px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--texto);
+  background: var(--fondo);
+}
+
+h1, h2, h3, h4 { margin: 0; font-weight: 600; }
+button { font: inherit; color: inherit; cursor: pointer; }
+table { border-collapse: collapse; width: 100%; }
+
+/* --- cabecera ----------------------------------------------------------- */
+
+.cabecera-app {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 24px;
+  height: 56px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--borde);
+}
+
+.marca { display: flex; align-items: center; gap: 28px; }
+.logo { font-size: 17px; font-weight: 650; letter-spacing: -.01em; }
+
+.tabs { display: flex; gap: 2px; }
+
+.tab {
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 7px;
+  background: none;
+  color: var(--tenue);
+  font-weight: 500;
+}
+.tab:hover { background: var(--fondo); color: var(--texto); }
+.tab.activa { background: var(--fondo); color: var(--texto); }
+
+.precios { display: flex; align-items: center; gap: 12px; }
+
+.precios .sello { color: var(--tenue); font-size: 13px; }
+.precios .sello.vencido { color: var(--alerta); font-weight: 500; }
+
+/* --- botones ------------------------------------------------------------ */
+
+.btn {
+  padding: 6px 12px;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: 7px;
+  background: var(--panel);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--fondo); }
+.btn.primario { background: var(--acento); border-color: var(--acento); color: #fff; }
+.btn.primario:hover { filter: brightness(1.08); }
+.btn.peligro { color: var(--peligro); border-color: transparent; background: none; }
+.btn.peligro:hover { background: #fbecea; }
+.btn.discreto { border-color: transparent; background: none; color: var(--tenue); }
+.btn.discreto:hover { background: var(--fondo); color: var(--texto); }
+.btn:disabled { opacity: .45; cursor: default; }
+
+.icono {
+  width: 26px; height: 26px;
+  display: grid; place-items: center;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: 7px;
+  background: var(--panel);
+  font-size: 16px; line-height: 1;
+}
+.icono:hover { background: var(--fondo); }
+
+/* --- layout ------------------------------------------------------------- */
+
+.vista { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: calc(100vh - 56px); }
+/* `display: grid` le gana al atributo hidden, que solo trae display:none del UA. */
+.vista[hidden] { display: none; }
+
+.panel-lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 14px;
+  border-right: 1px solid var(--borde);
+  background: var(--panel);
+}
+
+.panel-lateral-cabecera { display: flex; align-items: center; justify-content: space-between; }
+.panel-lateral-cabecera h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--tenue); }
+
+.buscador, .campo {
+  width: 100%;
+  padding: 6px 9px;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: 7px;
+  background: var(--panel);
+  font: inherit;
+}
+.buscador:focus, .campo:focus { outline: 2px solid var(--acento-suave); border-color: var(--acento); }
+
+.lista { display: flex; flex-direction: column; gap: 1px; overflow-y: auto; }
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 9px;
+  border: 0;
+  border-radius: 7px;
+  background: none;
+  text-align: left;
+  width: 100%;
+}
+.item:hover { background: var(--fondo); }
+.item.activa { background: var(--acento-suave); color: var(--acento); font-weight: 550; }
+.item .cuenta { font-size: 11px; color: var(--tenue); }
+.item.activa .cuenta { color: var(--acento); }
+
+.detalle { padding: 24px 28px 64px; overflow-x: auto; }
+
+/* --- estados vacíos ----------------------------------------------------- */
+
+.vacio {
+  display: grid;
+  place-content: center;
+  gap: 10px;
+  justify-items: center;
+  min-height: 320px;
+  color: var(--tenue);
+  text-align: center;
+}
+
+/* --- cabecera de detalle ------------------------------------------------ */
+
+.titulo-detalle {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+.titulo-detalle h1 { font-size: 22px; letter-spacing: -.01em; }
+.titulo-detalle .meta { color: var(--tenue); font-size: 13px; margin-top: 2px; }
+.acciones { display: flex; gap: 6px; align-items: center; }
+
+/* Campos editables in situ: el valor se ve como texto hasta que lo tocás. */
+.editable {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  border-bottom: 1px dashed var(--borde-fuerte);
+  background: none;
+  padding: 0 2px;
+  border-radius: 3px;
+}
+.editable:hover { background: var(--fondo); border-bottom-color: var(--tenue); }
+
+/* --- veredicto ---------------------------------------------------------- */
+
+.veredicto {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  border: 1px solid var(--borde);
+  border-left: 3px solid var(--acento);
+  border-radius: var(--radio);
+  background: var(--acento-suave);
+}
+.veredicto strong { font-size: 16px; }
+.veredicto .detalle-texto { color: var(--tenue); font-size: 13px; }
+.veredicto.sin-datos { background: var(--alerta-suave); border-left-color: var(--alerta); }
+
+/* --- tabla comparativa -------------------------------------------------- */
+
+.tarjeta {
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--panel);
+  box-shadow: var(--sombra);
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.tarjeta > h3 {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--borde);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--tenue);
+}
+
+/* `border-collapse: collapse` hace que el tbody se pinte por encima del thead
+   sticky. Con `separate` y borde por celda, el encabezado queda arriba. */
+.comparativa { border-collapse: separate; border-spacing: 0; }
+
+.comparativa th, .comparativa td {
+  padding: 10px 14px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--borde);
+}
+.comparativa tbody tr:last-child td { border-bottom: 0; }
+.comparativa thead th {
+  background: var(--panel);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--tenue);
+  font-weight: 600;
+}
+.comparativa col.ingrediente { width: 26%; }
+
+.comparativa .col-super { border-left: 1px solid var(--borde); }
+.comparativa .gana { background: var(--acento-suave); }
+.comparativa thead .gana { background: var(--acento-suave); color: var(--acento); }
+.comparativa .fuera { background: #faf9f7; color: var(--tenue); }
+
+.nombre-ingrediente { font-weight: 550; }
+.cantidad-linea { display: flex; align-items: center; gap: 4px; margin-top: 3px; }
+
+.celda-producto { display: block; width: 100%; text-align: left; border: 0; background: none; padding: 0; border-radius: 6px; }
+.celda-producto:hover .producto-titulo { text-decoration: underline; }
+.producto-titulo { display: block; line-height: 1.35; }
+.producto-meta { display: block; color: var(--tenue); font-size: 12px; margin-top: 2px; }
+.costo { font-variant-numeric: tabular-nums; font-weight: 550; white-space: nowrap; }
+
+.marca-super { display: inline-flex; align-items: center; gap: 6px; text-transform: capitalize; }
+.trofeo { font-size: 12px; }
+
+.etiqueta {
+  display: inline-block;
+  margin-left: 5px;
+  padding: 1px 6px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--fondo);
+  color: var(--tenue);
+  border: 1px solid var(--borde);
+}
+.etiqueta.aviso { background: var(--alerta-suave); color: var(--alerta); border-color: #f0dcb8; }
+.etiqueta.fijado { background: var(--acento-suave); color: var(--acento); border-color: #cde3d6; }
+.etiqueta.oferta { background: #eef2fb; color: #3c5a9a; border-color: #d6e0f2; }
+
+.problema { color: var(--alerta); }
+.problema .btn { margin-top: 6px; }
+
+.comparativa tfoot td { border-top: 1px solid var(--borde-fuerte); border-bottom: 0; padding: 10px 14px; }
+.comparativa tfoot .fila-total td { font-weight: 600; }
+.comparativa tfoot .fila-venta td { background: #fbfbfa; }
+.comparativa tfoot .fila-venta .col-super { font-size: 16px; font-weight: 650; }
+.comparativa tfoot .fila-venta.gana .col-super { color: var(--acento); }
+.etiqueta-total { color: var(--tenue); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+
+/* --- packaging ---------------------------------------------------------- */
+
+.filas-simples td { padding: 8px 16px; border-bottom: 1px solid var(--borde); }
+.filas-simples tr:last-child td { border-bottom: 0; }
+.pie-tarjeta { padding: 10px 16px; border-top: 1px solid var(--borde); background: #fbfbfa; }
+
+/* --- selector de productos (modal y pantalla de ingrediente) ------------ */
+
+dialog#modal {
+  border: 0;
+  border-radius: 12px;
+  padding: 0;
+  max-width: min(1100px, 94vw);
+  width: 100%;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, .18);
+}
+dialog#modal::backdrop { background: rgba(30, 29, 26, .35); }
+
+.modal-cabecera {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+  padding: 16px 20px; border-bottom: 1px solid var(--borde);
+}
+.modal-cabecera h3 { font-size: 16px; }
+.modal-cabecera .meta { color: var(--tenue); font-size: 13px; margin-top: 2px; }
+.modal-cuerpo { padding: 16px 20px; max-height: 68vh; overflow-y: auto; }
+.modal-pie { display: flex; justify-content: space-between; gap: 8px; padding: 12px 20px; border-top: 1px solid var(--borde); background: #fbfbfa; }
+
+.columnas-super { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+
+.columna-super { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.columna-super > header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.columna-super > header h4 { text-transform: capitalize; font-size: 14px; }
+
+/* El producto elegido NO es una tarjeta como las opciones: es el encabezado de
+   la columna. Va en sólido para que no compita con la selección de la lista. */
+.en-uso {
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--acento);
+  color: #fff;
+}
+.en-uso .producto-meta { color: rgba(255, 255, 255, .78); }
+.en-uso .producto-titulo { font-weight: 600; }
+
+.en-uso.automatico { background: #8a5a10; }
+.en-uso.ninguno {
+  border: 1px dashed var(--borde-fuerte);
+  background: none;
+  color: var(--tenue);
+}
+
+.candidatos { display: flex; flex-direction: column; gap: 6px; }
+/* Solo dentro del modal hace falta acotar la altura; en la pantalla de
+   ingrediente scrollea la página y no queda una tarjeta cortada al medio. */
+dialog .candidatos { max-height: 46vh; overflow-y: auto; padding-right: 2px; }
+
+.candidato {
+  display: block; width: 100%; text-align: left;
+  padding: 8px 10px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background: var(--panel);
+}
+.candidato:hover { border-color: var(--borde-fuerte); background: var(--fondo); }
+/* La opción elegida de la lista se marca con una barra al costado, no con
+   relleno: el relleno la confundía con el encabezado de arriba. */
+.candidato.elegido {
+  border-color: var(--borde);
+  background: var(--panel);
+  box-shadow: inset 3px 0 0 var(--acento);
+}
+.candidato .tilde { display: none; }
+.candidato.elegido .tilde {
+  display: inline;
+  color: var(--acento);
+  font-weight: 700;
+  margin-right: 4px;
+}
+.candidato .precio { font-weight: 600; font-variant-numeric: tabular-nums; }
+.candidato .linea { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+
+a.enlace { color: var(--tenue); text-decoration: none; font-size: 12px; }
+a.enlace:hover { color: var(--acento); text-decoration: underline; }
+
+/* --- formularios en modal ----------------------------------------------- */
+
+.formulario { display: flex; flex-direction: column; gap: 12px; min-width: 340px; }
+.formulario label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--tenue); }
+.formulario .ayuda { font-size: 12px; color: var(--tenue); }
+.fila-campos { display: flex; gap: 8px; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 6px 3px 9px;
+  border: 1px solid var(--borde-fuerte); border-radius: 999px;
+  background: var(--panel); font-size: 12px;
+}
+.chip button { border: 0; background: none; color: var(--tenue); padding: 0 2px; line-height: 1; font-size: 14px; }
+.chip button:hover { color: var(--peligro); }
+
+/* --- avisos ------------------------------------------------------------- */
+
+.avisos { position: fixed; bottom: 18px; right: 18px; display: flex; flex-direction: column; gap: 8px; z-index: 50; }
+
+.aviso {
+  padding: 10px 14px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: var(--sombra);
+  max-width: 340px;
+}
+.aviso.error { border-color: #e8c3bd; background: #fbecea; color: var(--peligro); }
+
+/* --- progreso ----------------------------------------------------------- */
+
+.progreso { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--tenue); }
+.barra { width: 90px; height: 5px; border-radius: 999px; background: var(--borde); overflow: hidden; }
+.barra span { display: block; height: 100%; background: var(--acento); transition: width .3s ease; }
+
+/* --- menú desplegable --------------------------------------------------- */
+
+.desplegable { position: relative; }
+.menu {
+  position: absolute; right: 0; top: calc(100% + 6px);
+  min-width: 220px;
+  padding: 5px;
+  border: 1px solid var(--borde);
+  border-radius: 9px;
+  background: var(--panel);
+  box-shadow: var(--sombra);
+  z-index: 20;
+}
+.menu button {
+  display: block; width: 100%; text-align: left;
+  padding: 7px 10px; border: 0; border-radius: 6px; background: none; font-size: 13px;
+}
+.menu button:hover { background: var(--fondo); }
+.menu button:disabled { opacity: .4; cursor: default; }
+.menu .separador { height: 1px; margin: 4px 0; background: var(--borde); }
+
+/* Las etiquetas dentro del encabezado no heredan el versalita del th. */
+.comparativa thead .etiqueta { text-transform: none; letter-spacing: 0; font-weight: 500; }
+.comparativa thead th .marca-super { gap: 8px; }
+
+/* Un buscador que abarca las tres columnas: encontrar el mismo producto en los
+   tres supermercados es el motivo por el que se abre esta pantalla. */
+.barra-buscador { margin-bottom: 14px; }
+.barra-buscador .buscador { max-width: 420px; }
+
+/* Acciones de la fila: aparecen al pasar por encima, para no repetir dos
+   enlaces por ingrediente en toda la tabla. */
+.acciones-fila { display: flex; gap: 2px; margin-top: 4px; visibility: hidden; }
+tr:hover .acciones-fila, tr:focus-within .acciones-fila { visibility: visible; }
+.btn.enlace-fila { padding: 2px 6px; font-size: 12px; }
+
+/* --- autocompletado de ingrediente -------------------------------------- */
+
+.sugerencias { display: flex; flex-direction: column; gap: 2px; max-height: 240px; overflow-y: auto; }
+
+.sugerencia {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  width: 100%; text-align: left;
+  padding: 7px 10px;
+  border: 1px solid transparent; border-radius: 7px;
+  background: none; font-size: 14px;
+}
+.sugerencia:hover { background: var(--fondo); }
+.sugerencia.nueva { color: var(--acento); font-weight: 550; }
+.sugerencia.nueva:hover { background: var(--acento-suave); }
+
+.tarjeta-nuevo {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 12px; border: 1px solid var(--borde); border-radius: 8px; background: #fbfbfa;
+}
+
+.tarjeta.franja { display: flex; flex-direction: column; gap: 8px; padding: 12px 16px; margin-bottom: 18px; }
+.btn.ver-mas { width: 100%; justify-content: center; margin-top: 2px; }
+
+.barra-buscador { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.campo-orden { width: auto; min-width: 200px; }
+
+/* El precio llevado a kilo/litro: es lo que decide cuál conviene, así que va
+   destacado sobre el precio del envase. */
+.producto-unitario { margin-top: 3px; font-size: 12px; font-weight: 550; color: var(--acento); }
+.candidato.elegido .producto-unitario { color: var(--acento); }
+
+.linea-ingrediente { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+/* Marca discreta: la fila usa un producto distinto al de siempre. */
+.marca-mano { margin-left: 6px; font-size: 11px; font-weight: 400; color: var(--tenue); }
+
+.punto-pendiente {
+  width: 6px; height: 6px; flex: none;
+  border-radius: 50%; background: var(--alerta);
+}
+
+/* El enlace al súper y la carga de tamaño solo al pasar por encima: repetidos
+   en treinta tarjetas eran más ruido que ayuda. */
+.pie-candidato { visibility: hidden; }
+.candidato-caja:hover .pie-candidato,
+.candidato-caja:focus-within .pie-candidato { visibility: visible; }
+
+.texto-confirmacion { margin: 0; max-width: 44ch; color: var(--tenue); }
+.btn.peligro-solido { background: var(--peligro); border-color: var(--peligro); color: #fff; }
+.btn.peligro-solido:hover { filter: brightness(1.08); }
+
+.separador-campo { height: 1px; background: var(--borde); margin: 2px 0; }
+
+/* Dentro de la banda sólida del producto en uso, el aviso tiene que leerse
+   sobre fondo oscuro. */
+.en-uso .etiqueta.aviso { background: rgba(255, 255, 255, .18); color: #fff; border-color: transparent; }
+
+/* En la tabla el aviso va pegado al nombre, no como bloque suelto. */
+.celda-producto .producto-meta .etiqueta { margin-left: 0; }

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pSapo — Presupuestos de tortas</title>
+<link rel="stylesheet" href="/static/estilo.css">
+</head>
+<body>
+
+<header class="cabecera-app">
+  <div class="marca">
+    <span class="logo">pSapo</span>
+    <nav class="tabs">
+      <button class="tab activa" data-vista="recetas">Recetas</button>
+      <button class="tab" data-vista="ingredientes">Ingredientes</button>
+    </nav>
+  </div>
+  <div class="precios" id="precios"></div>
+</header>
+
+<main>
+  <section id="vista-recetas" class="vista">
+    <aside class="panel-lateral">
+      <div class="panel-lateral-cabecera">
+        <h2>Recetas</h2>
+        <button id="btn-nueva-receta" class="icono" title="Nueva receta">+</button>
+      </div>
+      <div id="lista-recetas" class="lista"></div>
+    </aside>
+    <div id="detalle-receta" class="detalle"></div>
+  </section>
+
+  <section id="vista-ingredientes" class="vista" hidden>
+    <aside class="panel-lateral">
+      <div class="panel-lateral-cabecera">
+        <h2>Ingredientes</h2>
+        <button id="btn-nuevo-ingrediente" class="icono" title="Nuevo ingrediente">+</button>
+      </div>
+      <input id="buscar-ingrediente" type="search" placeholder="Buscar…" class="buscador">
+      <div id="lista-ingredientes" class="lista"></div>
+    </aside>
+    <div id="detalle-ingrediente" class="detalle"></div>
+  </section>
+</main>
+
+<dialog id="modal"></dialog>
+<div id="avisos" class="avisos"></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

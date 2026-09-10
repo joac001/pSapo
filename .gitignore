@@ -1,0 +1,17 @@
+# Entorno local
+venv/
+__pycache__/
+*.py[cod]
+
+# Datos del usuario: recetas, ingredientes y precios scrapeados.
+# La base se crea y se migra sola en el arranque.
+psapo.db
+psapo.db-journal
+psapo.db-wal
+
+# Artefactos de PyInstaller
+build/
+dist/
+
+# Navegadores de Playwright, cuando se instalan dentro del proyecto
+.playwright/
