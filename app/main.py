@@ -1,4 +1,5 @@
 import threading
+import uuid
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
@@ -15,6 +16,11 @@ STATIC_DIR = recurso("app/static")
 app = FastAPI(title="pSapo", version=VERSION)
 
 _scrape_estado = {"corriendo": False, "hecho": 0, "total": 0, "error": None, "alcance": None}
+
+# Cambia en cada arranque del server. La intro se muestra una vez por vez que se
+# abre pSapo, no una vez por recarga de la página: el navegador compara este
+# valor con el último que vio.
+ARRANQUE = uuid.uuid4().hex
 
 
 @app.on_event("startup")
@@ -34,6 +40,7 @@ def version():
 def estado():
     return {
         "version": VERSION,
+        "arranque": ARRANQUE,
         "ultima_actualizacion": scraping.ultima_actualizacion(),
         "desactualizado": scraping.esta_desactualizado(),
         "vencidos": len(scraping.ingredientes_desactualizados()),

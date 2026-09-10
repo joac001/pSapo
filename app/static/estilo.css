@@ -498,3 +498,57 @@ tr:hover .acciones-fila, tr:focus-within .acciones-fila { visibility: visible; }
 
 /* En la tabla el aviso va pegado al nombre, no como bloque suelto. */
 .celda-producto .producto-meta .etiqueta { margin-left: 0; }
+
+/* --- pantalla de carga -------------------------------------------------- */
+
+#intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  background: var(--texto);
+  animation: aparecer .2s ease;
+}
+#intro[hidden] { display: none; }
+#intro.saliendo { animation: desaparecer .45s ease forwards; }
+
+#intro video {
+  width: min(64vw, 560px);
+  max-height: 62vh;
+  object-fit: contain;
+}
+
+.intro-pie {
+  margin: 0;
+  color: rgba(255, 255, 255, .62);
+  font-size: 13px;
+  letter-spacing: .04em;
+}
+.intro-pie .puntos::after {
+  content: "";
+  animation: puntitos 1.4s steps(4, end) infinite;
+}
+
+#intro-saltear {
+  margin-top: 10px;
+  padding: 5px 14px;
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 999px;
+  background: none;
+  color: rgba(255, 255, 255, .55);
+  font-size: 12px;
+}
+#intro-saltear:hover { color: #fff; border-color: rgba(255, 255, 255, .5); }
+
+@keyframes aparecer { from { opacity: 0 } to { opacity: 1 } }
+@keyframes desaparecer { to { opacity: 0; visibility: hidden } }
+@keyframes puntitos { 0% { content: "" } 25% { content: "." } 50% { content: ".." } 75% { content: "..." } }
+
+/* Si el sistema pide menos animación, la intro no se muestra (lo decide el JS)
+   y cualquier transición que quede es instantánea. */
+@media (prefers-reduced-motion: reduce) {
+  #intro, #intro.saliendo { animation: none; }
+}

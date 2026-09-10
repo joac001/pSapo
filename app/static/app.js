@@ -1210,10 +1210,60 @@ function nuevoIngrediente() {
 
 document.getElementById("btn-nuevo-ingrediente").addEventListener("click", nuevoIngrediente);
 
+// --- pantalla de carga ----------------------------------------------------
+
+const CLAVE_INTRO = "psapo-ultimo-arranque";
+
+/** Muestra la intro una vez por cada vez que se abre pSapo.
+ *
+ * El server genera un id nuevo en cada arranque; el navegador guarda el último
+ * que vio. Recargar la página no la repite, cerrar y volver a abrir la app sí.
+ * Se marca como vista antes de reproducirla: si el usuario recarga a la mitad,
+ * no vuelve a empezar.
+ */
+function mostrarIntro(arranque) {
+  const caja = document.getElementById("intro");
+  if (!arranque || !caja) return;
+
+  let visto = null;
+  try { visto = localStorage.getItem(CLAVE_INTRO); } catch { /* modo privado */ }
+  if (visto === arranque) return;
+  try { localStorage.setItem(CLAVE_INTRO, arranque); } catch { /* idem */ }
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const video = document.getElementById("intro-video");
+  let terminada = false;
+  const terminar = () => {
+    if (terminada) return;
+    terminada = true;
+    caja.classList.add("saliendo");
+    video.pause();
+    setTimeout(() => { caja.hidden = true; video.removeAttribute("src"); video.load(); }, 450);
+    document.removeEventListener("keydown", porTecla);
+  };
+  const porTecla = () => terminar();
+
+  caja.hidden = false;
+  caja.addEventListener("click", terminar);
+  document.addEventListener("keydown", porTecla);
+  video.addEventListener("ended", terminar);
+  // Si el video no está o el navegador no lo puede reproducir, la app no puede
+  // quedar tapada por una pantalla negra.
+  video.addEventListener("error", terminar);
+
+  video.src = "/static/intro.webm";
+  // Va muteado a propósito: los navegadores bloquean el autoplay con sonido, y
+  // una intro que no arranca es peor que una intro sin audio.
+  video.play().catch(terminar);
+}
+
 // --- arranque -------------------------------------------------------------
 
 async function arrancar() {
-  refrescarPrecios();
+  await refrescarPrecios();
+  mostrarIntro(estado.precios?.arranque);
+
   const ruta = rutaActual() || { vista: "recetas", id: null };
   mostrarVista(ruta.vista);
   // Se cargan las dos listas; la URL manda a quién seleccionar en cada una.

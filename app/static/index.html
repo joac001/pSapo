@@ -44,6 +44,15 @@
   </section>
 </main>
 
+<!-- Pantalla de carga. Se muestra una vez por cada vez que se abre pSapo, no
+     en cada recarga; app.js decide comparando el id de arranque del server.
+     El video arranca sin src para no descargarlo cuando no se va a ver. -->
+<div id="intro" hidden>
+  <video id="intro-video" muted playsinline preload="none"></video>
+  <p class="intro-pie">cargando pSapo<span class="puntos"></span></p>
+  <button id="intro-saltear" type="button">Saltear</button>
+</div>
+
 <dialog id="modal"></dialog>
 <div id="avisos" class="avisos"></div>
 

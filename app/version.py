@@ -5,4 +5,4 @@ valor, y si todavía no existe una release con ese tag, buildea el ejecutable y
 la crea. El updater compara este número con el de la última release.
 """
 
-VERSION = "1.0.1"
+VERSION = "1.1.0"

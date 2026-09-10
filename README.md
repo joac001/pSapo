@@ -60,6 +60,28 @@ Buscar precios de un ingrediente puntual ocurre además como efecto de crear el
 ingrediente o corregir sus términos, porque un ingrediente sin productos no
 sirve para nada. No es una acción aparte.
 
+### La intro
+
+`app/static/intro.webm` es la pantalla de carga: la princesa que se convierte en
+sapo. Sale del video original con el fondo recortado por luminancia
+(`lumakey`), porque el fondo es negro puro y el contenido brilla:
+
+```bash
+ffmpeg -ss 0.833333 -i original.mp4 -an \
+  -vf "lumakey=threshold=0.10:tolerance=0.14:softness=0.22,scale=720:-2,format=yuva420p" \
+  -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 0 -crf 36 app/static/intro.webm
+```
+
+El `-ss` saltea los primeros 0.83 s, que son los únicos con fondo blanco. Va sin
+audio a propósito: los navegadores bloquean el autoplay con sonido, y una intro
+que no arranca es peor que una sin audio. El alfa viaja en una pista aparte del
+WebM (`alpha_mode: 1`); ffmpeg no la muestra al decodificar, los navegadores sí.
+
+Se muestra **una vez por cada vez que se abre pSapo**, no en cada recarga: el
+server genera un id en cada arranque y el navegador guarda el último que vio. Se
+saltea con un clic o cualquier tecla, y se salta entera si el sistema pide menos
+animación.
+
 ### Lo que la pantalla recuerda
 
 Cada acción vuelve a pedir los datos y repinta. Para que eso no se sienta como
