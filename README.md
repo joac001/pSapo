@@ -68,9 +68,15 @@ sapo. Sale del video original con el fondo recortado por luminancia
 
 ```bash
 ffmpeg -ss 0.833333 -i original.mp4 -an \
-  -vf "lumakey=threshold=0.10:tolerance=0.14:softness=0.22,scale=720:-2,format=yuva420p" \
+  -vf "delogo=x=1132:y=572:w=56:h=56,\
+       lumakey=threshold=0.10:tolerance=0.14:softness=0.22,scale=720:-2,format=yuva420p" \
   -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 0 -crf 36 app/static/intro.webm
 ```
+
+El `delogo` saca la marca del generador, un ✦ fijo de 48×48 en `x 1136, y 576`.
+Va con `delogo` y no tapándola con un rectángulo negro porque a mitad del video
+hay un flash blanco: `delogo` rellena interpolando el borde, así que en la parte
+oscura queda negro (y después transparente) y en el flash queda claro.
 
 El `-ss` saltea los primeros 0.83 s, que son los únicos con fondo blanco. Va sin
 audio a propósito: los navegadores bloquean el autoplay con sonido, y una intro
